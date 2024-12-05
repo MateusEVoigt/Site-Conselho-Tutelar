@@ -1,0 +1,73 @@
+create table usuarios (
+	id serial primary key,
+	nome varchar(255) not null,
+	email varchar(255) unique not null,
+	senha varchar(255) not null,
+	tipo_usuario varchar(50) not null,
+	data_criacao timestamp default current_timestamp
+);
+
+create table funcionarios (
+	id serial primary key,
+	usuario_id int not null,
+	cargo varchar (255),
+	telefone varchar(20),
+	foreign key(usuario_id) references usuarios(id) on delete cascade
+);
+
+create table conteudos (
+	id serial primary key,
+	titulo varchar(255) not null,
+	texto text not null,
+	tipo_conteudo varchar(50) not null
+);
+
+INSERT INTO conteudos (titulo, texto, tipo_conteudo)
+VALUES 
+('Conselho Tutelar', 
+'Os conselhos tutelares foram criados em 1990, com a publicação do Estatuto da Criança e do Adolescente (ECA), para desempenhar uma função estratégica: zelar pelo cumprimento dos direitos da criança e do adolescente. Nesse sentido, começam a agir sempre que os direitos de crianças e adolescentes forem ameaçados ou violados pela própria sociedade, pelo Estado, pelos pais/responsáveis ou em razão de sua própria conduta.
+
+Os conselhos tutelares são órgãos autônomos, permanentes e não jurisdicionais, que integram a administração pública local. No caso do Distrito Federal, são vinculados administrativamente à Secretaria de Justiça e Cidadania (Sejus-DF), que tem entre suas atribuições a promoção de políticas públicas para crianças e adolescentes e, portanto, garante as condições de funcionamento desses órgãos e a capacitação dos conselheiros.', 
+'conselho_tutelar');
+
+
+INSERT INTO conteudos (titulo, texto, tipo_conteudo)
+VALUES 
+('Estatuto da Criança e do Adolescente (ECA)', 
+'O Estatuto da Criança e do Adolescente, Lei Federal nº 8.069, de 13 de julho de 1990, que regulamenta o artigo 227 da Constituição Federal, define as crianças e os adolescentes como sujeitos de direitos, em condição peculiar de desenvolvimento, que demandam proteção integral e prioritária por parte da família, sociedade e do Estado.
+
+Como consequência da doutrina de proteção integral à criança e ao adolescente, o ECA prevê a integração operacional dos órgãos e instituições públicas e entidades da sociedade civil, visando à proteção, à responsabilização por ação ou omissão de violação dos direitos, à aplicação dos instrumentos postulados pelo sistema e à interação entre os atores desse sistema.', 
+'eca');
+
+
+CREATE TABLE mensagens_chat (
+    id SERIAL PRIMARY KEY,
+    usuario_id INT NOT NULL,  
+    mensagem TEXT NOT NULL,   
+    data_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  
+    tipo_usuario VARCHAR(50) NOT NULL  
+);
+
+
+CREATE TABLE chamados (
+    id SERIAL PRIMARY KEY,
+    usuario_id INT NOT NULL, 
+    numero_chamado SERIAL NOT NULL, 
+    titulo VARCHAR(255) NOT NULL, 
+    mensagem TEXT NOT NULL, 
+    status VARCHAR(20) DEFAULT 'aberto', 
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE 
+);
+
+
+CREATE TABLE eventos (
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(255) NOT NULL,
+    descricao TEXT NOT NULL,
+    data_inicio TIMESTAMP NOT NULL,
+    data_fim TIMESTAMP NOT NULL,
+    ativo BOOLEAN DEFAULT TRUE,  
+    criado_por INT REFERENCES usuarios(id),  
+    CONSTRAINT chk_data_fim CHECK (data_fim > data_inicio)  
+);
